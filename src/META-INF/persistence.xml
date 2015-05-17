@@ -7,7 +7,10 @@
 		<class>com.model.Rapport</class>
 		<class>com.model.Reclamation</class>
 		<class>com.model.Utilisateur</class>
+		<class>com.model.Dossier</class>
 		<properties>
+			<property name="hibernate.show_sql" value="true" />
+        	<property name="hibernate.format_sql" value="true"/>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
 			<property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver"/>
 			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>

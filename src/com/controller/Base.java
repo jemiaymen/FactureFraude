@@ -17,7 +17,7 @@ import com.model.*;
 public class Base extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("FactureFraude");   
-	public int _id ;
+	public long _id ;
 	public String _poste;
     public Base() {
         super();
@@ -41,7 +41,7 @@ public class Base extends HttpServlet {
 			return "";
 		}
 	}
-	public int getId(HttpServletRequest request){
+	public long getId(HttpServletRequest request){
 		Cookie[] c = request.getCookies();
 		String uid = null;
 		if (c != null) {
@@ -52,7 +52,7 @@ public class Base extends HttpServlet {
 			}
 			if (uid != null) {
 				try {
-					return Integer.parseInt(uid);
+					return Long.parseLong(uid);
 				}catch(Exception ex){
 				}
 			}
@@ -61,7 +61,7 @@ public class Base extends HttpServlet {
 		return 0;
 	}
 	
-	public void IsLogin(HttpServletRequest request, HttpServletResponse response,String poste)
+	public void IsLogin(HttpServletRequest request, HttpServletResponse response,String poste,String url)
 			throws IOException, ServletException {
 		String uid = null;
 		EntityManager em = emf.createEntityManager();
@@ -75,18 +75,15 @@ public class Base extends HttpServlet {
 			}
 			if (uid != null) {
 				try {
-					int id = Integer.parseInt(uid);
-					Utilisateur u = (Utilisateur) em.find(Utilisateur.class, id);
-					if (u == null) {
-						response.sendRedirect("Logout");
-					} else {
-						if(u.getPoste().equals(poste)){
+						long id = Long.parseLong(uid);
+						Utilisateur u = (Utilisateur) em.find(Utilisateur.class,id);
+						String p = u.getPoste();
+						if(p.equals(poste)){
 							request.setAttribute("user", u);
+							request.getRequestDispatcher(url).forward(request, response);
 						}else {
 							response.sendRedirect("Logout");
 						}
-						
-					}
 				} catch (Exception ex) {
 					response.sendRedirect("Logout");
 				}

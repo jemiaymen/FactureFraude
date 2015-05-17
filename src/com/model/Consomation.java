@@ -16,6 +16,8 @@ public class Consomation implements Serializable {
 	@Id
 	private long id;
 
+	private String anne;
+
 	private String consoannuel;
 
 	private String consocompteur;
@@ -34,6 +36,14 @@ public class Consomation implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getAnne() {
+		return this.anne;
+	}
+
+	public void setAnne(String anne) {
+		this.anne = anne;
 	}
 
 	public String getConsoannuel() {

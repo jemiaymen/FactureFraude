@@ -35,6 +35,10 @@ public class Utilisateur implements Serializable {
 	@OneToMany(mappedBy="utilisateur")
 	private List<Compteur> compteurs;
 
+	//bi-directional many-to-one association to Dossier
+	@OneToMany(mappedBy="utilisateur")
+	private List<Dossier> dossiers;
+
 	//bi-directional many-to-one association to Rapport
 	@OneToMany(mappedBy="utilisateur")
 	private List<Rapport> rapports;
@@ -130,6 +134,28 @@ public class Utilisateur implements Serializable {
 		compteur.setUtilisateur(null);
 
 		return compteur;
+	}
+
+	public List<Dossier> getDossiers() {
+		return this.dossiers;
+	}
+
+	public void setDossiers(List<Dossier> dossiers) {
+		this.dossiers = dossiers;
+	}
+
+	public Dossier addDossier(Dossier dossier) {
+		getDossiers().add(dossier);
+		dossier.setUtilisateur(this);
+
+		return dossier;
+	}
+
+	public Dossier removeDossier(Dossier dossier) {
+		getDossiers().remove(dossier);
+		dossier.setUtilisateur(null);
+
+		return dossier;
 	}
 
 	public List<Rapport> getRapports() {

@@ -16,6 +16,8 @@ public class Reclamation implements Serializable {
 	@Id
 	private long id;
 
+	private long etat;
+
 	private String libelle;
 
 	private String typerec;
@@ -34,6 +36,14 @@ public class Reclamation implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public long getEtat() {
+		return this.etat;
+	}
+
+	public void setEtat(long etat) {
+		this.etat = etat;
 	}
 
 	public String getLibelle() {

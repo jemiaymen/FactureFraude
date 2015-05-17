@@ -1,8 +1,10 @@
 package com.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +30,7 @@ public class Admin extends Base implements Servlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		IsLogin(request,response,"Admin");
+		
 		
 		int del;
 		
@@ -45,14 +47,14 @@ public class Admin extends Base implements Servlet {
 			}
 		}
 		
+		request.setAttribute("users", getAllUser());
+		IsLogin(request,response,"admin","Admin.jsp");
 
+		
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		IsLogin(request,response,"Admin");
-		
-		String conf = request.getParameter("add");
 		
 		String adress = request.getParameter("adress");
 		
@@ -69,8 +71,8 @@ public class Admin extends Base implements Servlet {
 		String tel = request.getParameter("tel");
 		
 		
-		if(conf != null && adress != null && cin != null && nom != null && prenom != null
-				&& poste != null && poste != null && pw != null && tel != null){
+		if(adress != null && cin != null && nom != null && prenom != null
+				&& poste != null && pw != null && tel != null){
 			Utilisateur u = new Utilisateur();
 			
 			u.setAdress(adress);
@@ -89,17 +91,19 @@ public class Admin extends Base implements Servlet {
 			}
 			
 		}
+		
+		request.setAttribute("users", getAllUser());
+		IsLogin(request,response,"admin","Admin.jsp");
 	}
 
 	
-	public boolean delUser(int id){
+	public boolean delUser(long id){
 		EntityManager em = emf.createEntityManager();
 		try{
 			em.getTransaction().begin();
-			Utilisateur u = em.find(Utilisateur.class, id);
-			em.remove(u);
+			Query q = em.createQuery("Delete Utilisateur where id =" + id);
+			q.executeUpdate();
 			em.getTransaction().commit();
-			em.close();
 			return true;
 		}catch(Exception ex){
 			if (em.getTransaction().isActive()){
@@ -129,4 +133,16 @@ public class Admin extends Base implements Servlet {
 		
 		return false;
 	}
+	
+	
+	public List<Utilisateur> getAllUser(){
+		EntityManager em = emf.createEntityManager();
+		try{
+			return em.createQuery("select u from Utilisateur u ", Utilisateur.class).getResultList();
+		}catch(Exception ex){
+			return null;
+		}
+		
+	}
+	
 }

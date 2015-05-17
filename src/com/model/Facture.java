@@ -23,9 +23,9 @@ public class Facture implements Serializable {
 
 	private String montan;
 
-	private BigDecimal nbrmois;
+	private long nbrmois;
 
-	private BigDecimal nservice;
+	private long nservice;
 
 	private String rib;
 
@@ -33,13 +33,14 @@ public class Facture implements Serializable {
 
 	private String sold;
 
+	@Column(name="\"STATE\"")
+	private long state;
+
 	private String taxe;
 
 	private String totalconso;
 
 	private String typeservice;
-
-	private BigDecimal userid;
 
 	//bi-directional many-to-one association to Compteur
 	@ManyToOne
@@ -81,19 +82,19 @@ public class Facture implements Serializable {
 		this.montan = montan;
 	}
 
-	public BigDecimal getNbrmois() {
+	public long getNbrmois() {
 		return this.nbrmois;
 	}
 
-	public void setNbrmois(BigDecimal nbrmois) {
+	public void setNbrmois(long nbrmois) {
 		this.nbrmois = nbrmois;
 	}
 
-	public BigDecimal getNservice() {
+	public long getNservice() {
 		return this.nservice;
 	}
 
-	public void setNservice(BigDecimal nservice) {
+	public void setNservice(long nservice) {
 		this.nservice = nservice;
 	}
 
@@ -121,6 +122,14 @@ public class Facture implements Serializable {
 		this.sold = sold;
 	}
 
+	public long getState() {
+		return this.state;
+	}
+
+	public void setState(long state) {
+		this.state = state;
+	}
+
 	public String getTaxe() {
 		return this.taxe;
 	}
@@ -143,14 +152,6 @@ public class Facture implements Serializable {
 
 	public void setTypeservice(String typeservice) {
 		this.typeservice = typeservice;
-	}
-
-	public BigDecimal getUserid() {
-		return this.userid;
-	}
-
-	public void setUserid(BigDecimal userid) {
-		this.userid = userid;
 	}
 
 	public Compteur getCompteur() {
