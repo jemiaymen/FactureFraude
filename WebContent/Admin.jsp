@@ -70,8 +70,7 @@ body {
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <%
  	Utilisateur u = (Utilisateur) request.getAttribute("user");
- 	Utilisateur editu = (Utilisateur) request.getAttribute("editu");	
- 	String lbl="",lbltype="",lblzone="";
+
 
   	if (u != null) {
   		out.println(u.getNom() + " " + u.getPrenom());
@@ -133,11 +132,7 @@ body {
 
 
 					<label class="sr-only">Adress</label>
-					<textarea class="form-control" placeholder="Adress" name="adress"
-						required>
-						<%
-							if(editu != null) out.println(editu.getAdress());
-						%>
+					<textarea class="form-control" placeholder="Adress" name="adress">
 					</textarea>
 					<br>
 					<button class="btn btn-lg btn-info form-control" type="submit">

@@ -58,6 +58,18 @@ dataactivation DATE not null
 );
 
 
+create sequence seq_com start with 1 increment by 1;
+
+create trigger trg_com
+before insert on compteur
+for each row
+begin
+select seq_com.nextval
+into :new.id
+from dual;
+end;
+/
+
 create table consomation(
 id number primary key,
 cid number not null,

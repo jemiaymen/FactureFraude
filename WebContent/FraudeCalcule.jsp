@@ -10,7 +10,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agent | Gere Reclamation</title>
+<title>Agent | Calcul Fraude</title>
 
 <!-- Bootstrap -->
 <link href="/FactureFraude/bootstrapjsp/bootstrap/css/bootstrap.min.css"
@@ -56,17 +56,15 @@ body {
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li class='active'><a href="GetReclamation">Reclamation</a></li>
+					<li ><a href="GetReclamation">Reclamation</a></li>
 					<li ><a href="Doc">Gere Dossier</a></li>
-					<li ><a href="CalculFraude">Calcule Fraude</a></li>
+					<li class='active'><a href="CalculFraude">Calcule Fraude</a></li>
 					<li ><a href="Facturation">Facturation</a></li>
 				</ul>
 				<ul class="nav navbar-nav pull-right">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <%
  	Utilisateur u = (Utilisateur) request.getAttribute("user");
- 	Utilisateur editu = (Utilisateur) request.getAttribute("editu");	
- 	String lbl="",lbltype="",lblzone="";
 
   	if (u != null) {
   		out.println(u.getNom() + " " + u.getPrenom());
@@ -81,100 +79,102 @@ body {
 		</div>
 	</nav>
 	<div class="container ">
-
 		<div class="row">
-		
-			<div class="col-lg-8">
-				<h2>Reclamations</h2>
-				<table class="table">
-
-					<th>Nom Prenom</th>
-					<th>Libelle</th>
-					<th>Type Reclamation</th>
-					<th>Action</th>
-					<%
-						@SuppressWarnings("unchecked")
-							    List<Reclamation> recs = (List<Reclamation>) request.getAttribute("recs");
-								if(recs != null){
-									for(Reclamation r : recs){
-										out.println("<tr>");
-										
-										out.println("<td>");
-										out.println(r.getUtilisateur().getNom() + " " + r.getUtilisateur().getPrenom());
-										out.println("</td>");
-										
-										
-										out.println("<td>");
-										out.println(r.getLibelle());
-										out.println("</td>");
-										
-										
-										out.println("<td>");
-										out.println(r.getTyperec());
-										out.println("</td>");
-										
-										out.println("<td><a data-toggle='tooltip' title='Verifier' href='?ver="+ r.getId() +"'><span class='glyphicon glyphicon-ok'></span></a>  | <a data-toggle='tooltip' title='Cloturer' href='?del="+ r.getId() +"'><span class='glyphicon glyphicon-trash'></span></a></td>");
-										
-										out.println("</tr>");
-									}
-								}
-					%>
-				</table>
-			</div>
-		</div>
-		<div class="row">
-					<%
-								Reclamation r = (Reclamation) request.getAttribute("rec");
+			
+			
+			<%
+									@SuppressWarnings("unchecked")
+		    						List<Compteur> cs = (List<Compteur>) request.getAttribute("cs");
 					
-									if(r != null){
-										out.println("<div class='col-lg-10'><h2>Detail</h2><table class='table'><th>Nom Prenom</th><th>Cin</th><th>Adress</th><th>Tel</th><th>Marque Compteur</th><th>Type Compteur</th><th>Consomation</th><th>Action</th>");		
+									
+										out.println("<div class='col-lg-10'><h2>Compteurs</h2><table class='table'><th>Nom Prenom</th><th>Tel</th><th>Cin</th><th>Marque Compteur</th><th>Type Compteur</th><th>Date Activation</th><th>Action</th>");		
+										for(Compteur r : cs){
 										out.println("<tr>");
 										out.println("<td>");
 										out.println(r.getUtilisateur().getNom() + " " + r.getUtilisateur().getPrenom());
 										out.println("</td>");
-										
-										
-										out.println("<td>");
-										out.println(r.getUtilisateur().getCin());
-										out.println("</td>");
-										
-										out.println("<td>");
-										out.println(r.getUtilisateur().getAdress());
-										out.println("</td>");
+
 										
 										out.println("<td>");
 										out.println(r.getUtilisateur().getTel());
-										out.println("</td>"); 
-										
-										out.println("<td>");
-										for(Compteur c : r.getUtilisateur().getCompteurs()){
-											out.println(c.getMarque() + " |");
-										}
 										out.println("</td>");
 										
 										out.println("<td>");
-										for(Compteur c : r.getUtilisateur().getCompteurs()){
-											out.println(c.getType() + " |");
-										}
+										out.println(r.getUtilisateur().getCin());
+										out.println("</td>"); 										
+										
+										out.println("<td>");
+										out.println(r.getMarque());
 										out.println("</td>");
 										
 										out.println("<td>");
-										for(Compteur c : r.getUtilisateur().getCompteurs()){
-											for(Consomation cs : c.getConsomations()){
-												out.println( cs.getAnne() + ": " + cs.getConsoannuel() + " |");
-											}
-										}
+										out.println(r.getType());
 										out.println("</td>");
 										
-										out.println("<td> <a data-toggle='tooltip' title='Creer dossier' href='Doc?uid="+ r.getUtilisateur().getId() +"'><span class='glyphicon glyphicon-plus'></span></a></td>");
+
+										out.println("<td>");
+										out.println(r.getDataactivation());
+										out.println("</td>");
+										
+										out.println("<td> <a data-toggle='tooltip' title='Suivie Consomation' href='?suiv="+ r.getUtilisateur().getId() + "&suivc="+ r.getId() +"'><span class='glyphicon glyphicon-log-in'></span></a> | <a data-toggle='tooltip' title='Facturation' href='Facturation?cid="+ r.getId() +"'><span class='glyphicon glyphicon-usd'></span></a></td>");
 										
 										out.println("</tr>");
+										}
 										out.println("</table></div>");
-									}
+									
 										
 					%>
-				
-			</div>
+					<%
+									@SuppressWarnings("unchecked")
+		    						List<Consomation> conso = (List<Consomation>) request.getAttribute("conso");
+										
+		    						if(conso != null){
+		    							out.println("<div class='col-lg-10'><h2>Consomation</h2><table class='table'><th>Marque Compteur</th><th>Type Compteur</th><th>Consomation compteur</th><th>Consomation Annuel</th><th>Annee</th><th>Action</th>");		
+										for(Consomation r : conso){
+										out.println("<tr>");
+										out.println("<td>");
+										out.println(r.getCompteur().getMarque());
+										out.println("</td>");
+
+										
+										out.println("<td>");
+										out.println(r.getCompteur().getType());
+										out.println("</td>");
+										
+										out.println("<td>");
+										out.println(r.getConsocompteur());
+										out.println("</td>"); 										
+										
+										out.println("<td>");
+										out.println(r.getConsoannuel());
+										out.println("</td>");
+										
+										out.println("<td>");
+										out.println(r.getAnne());
+										out.println("</td>");
+
+										
+										out.println("<td> <a data-toggle='tooltip' title='Calcule Fraude' href='?calc="+ r.getId() +"&suiv=" + r.getCompteur().getUtilisateur().getId() + "&suivc="+ r.getCompteur().getId()+ "'><span class='glyphicon glyphicon-list-alt'></span></a> </td>");
+										
+										out.println("</tr>");
+										}
+										out.println("</table></div>");
+		    						}
+		    						
+		    		String tau = (String) request.getAttribute("tau");
+		    		
+		    		if (tau != null){
+		    			out.println( "<div class='col-lg-10'><h3>" + tau + "</h3></div>");
+		    		}
+									
+										
+									
+										
+					%>
+			
+			
+		</div>
+		
 	</div>
 
 	<script src="/FactureFraude/bootstrapjsp/bootstrap/js/bootstrap.min.js"></script>

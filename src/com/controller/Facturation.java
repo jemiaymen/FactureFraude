@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.model.Compteur;
 import com.model.Facture;
+import com.model.Utilisateur;
 /**
  * Servlet implementation class Facturation
  */
@@ -22,21 +24,163 @@ public class Facturation extends Base {
      */
     public Facturation() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		long cid,mod,comp,print;
+		
+		try {
+			cid = Long.parseLong(request.getParameter("cid"));
+		} catch (NumberFormatException e) {
+			cid = 0;
+		}
+		
+		
+		try {
+			mod = Long.parseLong(request.getParameter("mod"));
+		} catch (NumberFormatException e) {
+			mod = 0;
+		}
+		
+		try {
+			print = Long.parseLong(request.getParameter("print"));
+		} catch (NumberFormatException e) {
+			print = 0;
+		}
+		
+		try {
+			comp = Long.parseLong(request.getParameter("comp"));
+		} catch (NumberFormatException e) {
+			comp = 0;
+		}
+		
+		if(comp != 0){
+			PasserServiceContable(comp);
+		}
+		
+		if(cid != 0){
+			request.setAttribute("c", getCompteur(cid));
+		}
+		
+		if(mod != 0){
+			request.setAttribute("fact", getFacture(mod));
+		}
+		
+		
+		if(print != 0){
+			request.setAttribute("printsrc", "$('#printc"+ print +"').print();");
+		}
+		
+		request.setAttribute("fct",  getAllFacture());
+		
+		IsLogin(request,response,"agent","Facturation.jsp");
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	public Facture getFacture(long mod) {
+		EntityManager em = emf.createEntityManager();
+		try{
+			return em.find(Facture.class, mod);
+		}catch(Exception ex){
+			return null;
+		}
+	}
+
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
+		String tsr = request.getParameter("tsr");
+		String dsrt = request.getParameter("dsrt");
+		String fadd = request.getParameter("fadd");
+		
+		
+		long nsr,nm,rip,rib,dconso,tconso,taxe,sold,mnt,cid,fid;
+	
+		
+		try {
+			nsr = Long.parseLong(request.getParameter("nsr"));
+			nm = Long.parseLong(request.getParameter("nm"));
+			rip = Long.parseLong(request.getParameter("rip"));
+			rib = Long.parseLong(request.getParameter("rib"));
+			dconso = Long.parseLong(request.getParameter("dconso"));
+			tconso = Long.parseLong(request.getParameter("tconso"));
+			taxe = Long.parseLong(request.getParameter("taxe"));
+			sold = Long.parseLong(request.getParameter("sold"));
+			mnt = Long.parseLong(request.getParameter("mnt"));
+			cid = Long.parseLong(request.getParameter("cid"));
+		} catch (NumberFormatException e) {
+			nsr = 0;
+			nm = 0;
+			rip = 0;
+			rib = 0;
+			dconso = 0;
+			tconso = 0;
+			taxe = 0;
+			sold = 0;
+			mnt = 0;
+			cid = 0;
+		}
+		
+		try {
+			fid = Long.parseLong(request.getParameter("fid"));
+		}catch(Exception e){
+			fid = 0;
+		}
+		
+		if (nsr != 0 && nm != 0 && rip != 0 && rib != 0 && dconso != 0 &&
+			tconso != 0 && taxe != 0 && sold != 0 && mnt != 0 && cid != 0 &&
+			tsr != null && dsrt != null && fadd != null){
+			
+			Compteur c = getCompteur(cid);
+			
+			
+			Facture tmp = new Facture();
+			tmp.setCompteur(c);
+			tmp.setTypeservice(tsr);
+			tmp.setTotalconso(tconso + "");
+			tmp.setTaxe(taxe+ "");
+			
+			tmp.setDetailconso(dconso + "");
+			tmp.setDistrict(dsrt);
+			tmp.setMontan(mnt + "");
+			tmp.setNbrmois( nm);
+			tmp.setNservice(nsr);
+			tmp.setRib(rib + "");
+			tmp.setRip(rip +"");
+			tmp.setSold(sold +"");
+			tmp.setState(1);
+			
+			AddFacture(tmp);
+			
+		}else if (nsr != 0 && nm != 0 && rip != 0 && rib != 0 && dconso != 0 &&
+				tconso != 0 && taxe != 0 && sold != 0 && mnt != 0 && cid != 0 &&
+				tsr != null && dsrt != null && fid != 0){
+			
+			Compteur c = getCompteur(cid);
+			Facture tmp = new Facture();
+			tmp.setCompteur(c);
+			tmp.setTypeservice(tsr);
+			tmp.setTotalconso(tconso + "");
+			tmp.setTaxe(taxe+ "");
+			
+			tmp.setDetailconso(dconso + "");
+			tmp.setDistrict(dsrt);
+			tmp.setMontan(mnt + "");
+			tmp.setNbrmois( nm);
+			tmp.setNservice(nsr);
+			tmp.setRib(rib + "");
+			tmp.setRip(rip +"");
+			tmp.setSold(sold +"");
+			tmp.setState(1);
+			UpdateFacture(fid,tmp);
+			
+		}
+		
+		request.setAttribute("fct",  getAllFacture());
+		
+		IsLogin(request,response,"agent","Facturation.jsp");
 	}
 
 	public boolean AddFacture(Facture f){
@@ -57,7 +201,7 @@ public class Facturation extends Base {
 	}
 	
 	
-	public boolean UpdateFacture(int fid,Facture f){
+	public boolean UpdateFacture(long fid,Facture f){
 		EntityManager em = emf.createEntityManager();
 		try{
 			em.getTransaction().begin();
@@ -86,14 +230,21 @@ public class Facturation extends Base {
 		}	
 	}
 	
+	public Compteur getCompteur(long uid){
+		EntityManager em = emf.createEntityManager();
+		try{
+			return em.find(Compteur.class, uid);
+		}catch(Exception ex){
+			return null;
+		}	
+	}
 	
-	
-	public boolean PasserServiceContable(int fid){
+	public boolean PasserServiceContable(long fid){
 		EntityManager em = emf.createEntityManager();
 		try{
 			em.getTransaction().begin();
 			Facture tmp = em.find(Facture.class, fid);
-			tmp.setState(3);
+			tmp.setState(2);
 			em.getTransaction().commit();
 			em.close();
 			return true;
